@@ -16,11 +16,15 @@
 			Stencil
 			{
 				Ref 100
-				Comp NotEqual
+				Comp Equal
 				Pass Keep
-				Fail IncrSat
-				ZFail Keep
+				Fail Keep
+				ZFail IncrSat
 			}
+
+			Cull Front
+			//ZTest Always
+//			ColorMask 0
 			
 			CGPROGRAM
 

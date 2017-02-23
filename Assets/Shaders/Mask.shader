@@ -23,9 +23,10 @@
 				ZFail Replace
 			}
 
-			ZWrite Off
+//			ZWrite Off
+			Cull Front
+			ColorMask 0
 
-			
 			CGPROGRAM
 
 			#include "UnityCG.cginc"
@@ -88,7 +89,10 @@
 			}
 
 			LOD 200
-			Cull Back
+
+//			ColorMask 0
+			ZTest Always
+			Cull Front
 			
 			CGPROGRAM
 
