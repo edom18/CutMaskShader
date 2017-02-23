@@ -1,39 +1,37 @@
-﻿Shader "Custom/ClipTarget" {
+﻿Shader "Custom/MaskBack" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
 		_Glossiness ("Smoothness", Range(0,1)) = 0.5
 		_Metallic ("Metallic", Range(0,1)) = 0.0
+		_Scale("Normal scale", Range(0,1)) = 0.0
 	}
 	SubShader
 	{
+		Tags { "RenderType"="Opaque" "Queue"="Geometry+100" }
+
+		LOD 200
+
+		// `102`とマークがついた部分（＝背面）をレンダリング
 		Pass
 		{
-			Tags { "RenderType"="Opaque" "Queue"="Geometry-5" }
-
-			LOD 200
-
 			Stencil
 			{
-				Ref 100
+				Ref 102
 				Comp Equal
 				Pass Keep
-				Fail Keep
-				ZFail IncrSat
+				ZFail Keep
 			}
 
-			Cull Front
-			//ZTest Always
 //			ColorMask 0
+			ZTest Always
+			Cull Front
 			
 			CGPROGRAM
 
-			// Physically based Standard lighting model, and enable shadows on all light types
 			#include "UnityCG.cginc"
 			#pragma vertex vert
 			#pragma fragment frag
-
-			// Use shader model 3.0 target, to get nicer looking lighting
 			#pragma target 3.0
 
 			sampler2D _MainTex;
@@ -58,19 +56,18 @@
 			{
 				v2f o;
 				o.pos = mul(UNITY_MATRIX_MVP, i.vertex);
-				o.normal = mul(unity_ObjectToWorld, float4(i.normal, 0.0));
-				// o.normal = UnityObjectToWorldNormal(i.normal);
+				o.normal = normalize(mul(unity_ObjectToWorld, float4(i.normal, 0.0)));
 				return o;
 			}
 
 			float4 frag(v2f i) : SV_Target
 			{
-				return float4(0.0, 0.0, 1.0, 1.0);
+				return float4(0.0, 1.0, 0.0, 1.0);
 			}
-
 
 			ENDCG
 		}
 	}
+
 	FallBack "Diffuse"
 }
