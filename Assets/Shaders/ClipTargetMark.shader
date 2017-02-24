@@ -32,7 +32,7 @@
 		ENDCG
 
 
-		// 次に、前のパスでマークを付けたところでかつZFailしている部分にマークを付ける
+		// まず、前のパスでマークを付けたところ（Ref=100）でかつZFailしている部分にマークを付ける
 		Pass
 		{
 			Stencil
@@ -45,13 +45,11 @@
 			}
 
 			Cull Front
-//			ZTest Always
 			ZWrite Off
 			ColorMask 0
 			
 			CGPROGRAM
 
-			#include "UnityCG.cginc"
 			#pragma vertex vert
 			#pragma fragment frag
 			#pragma target 3.0
@@ -61,11 +59,10 @@
 				return float4(0.0, 0.0, 1.0, 1.0);
 			}
 
-
 			ENDCG
 		}
 
-		// まず、マスク内の「ZFailしてない」部分にマークを付ける
+		// 次に、マスク内の「ZFailしてない」部分にマークを付ける
 		Pass
 		{
 			Stencil
@@ -78,16 +75,14 @@
 			}
 
 			Cull Back
-			ZTest LEqual
 			ZWrite Off
+			ColorMask 0
 
 			CGPROGRAM
 
-			#include "UnityCG.cginc"
 			#pragma vertex vert
 			#pragma fragment frag
 			#pragma target 3.0
-
 
 			float4 frag(v2f i) : SV_Target
 			{
