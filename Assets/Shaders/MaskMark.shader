@@ -13,7 +13,7 @@
 		{
 			Stencil
 			{
-				Ref 100
+				Ref 1
 				Comp Always
 				Pass Replace
 				ZFail Replace

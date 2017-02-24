@@ -37,7 +37,7 @@
 		{
 			Stencil
 			{
-				Ref 100
+				Ref 1
 				Comp Equal
 				Pass Keep
 				Fail Keep
@@ -67,7 +67,7 @@
 		{
 			Stencil
 			{
-				Ref 101
+				Ref 2
 				Comp Equal
 				Pass IncrSat
 				Fail Keep
