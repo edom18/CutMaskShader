@@ -4,7 +4,7 @@
 	}
 	SubShader
 	{
-		Tags { "RenderType"="Opaque" "Queue"="Geometry-10" }
+		Tags { "RenderType"="Transparent" "Queue"="Transparent+5" }
 
 		LOD 200
 

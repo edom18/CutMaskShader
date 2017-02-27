@@ -4,7 +4,7 @@
 	}
 	SubShader
 	{
-		Tags { "RenderType"="Opaque" "Queue"="Geometry-5" }
+		Tags { "RenderType"="Transparent" "Queue"="Transparent+10" }
 
 		LOD 200
 
@@ -87,6 +87,34 @@
 			float4 frag(v2f i) : SV_Target
 			{
 				return half4(1.0, 1.0, 0.0, 1.0);
+			}
+
+			ENDCG
+		}
+
+		// 普通にレンダリング
+		Pass
+		{
+			Stencil
+			{
+				Ref 1
+				Comp NotEqual
+				Pass Keep
+				Fail Keep
+				ZFail Keep
+			}
+
+			Cull Back
+			Zwrite On
+
+			CGPROGRAM
+
+			#pragma vertex vert
+			#pragma fragment frag
+
+			float4 frag(v2f i) : SV_Target
+			{
+				return half4(0, 0, 1, 1);
 			}
 
 			ENDCG
