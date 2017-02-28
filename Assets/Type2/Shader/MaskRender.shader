@@ -1,11 +1,13 @@
-﻿Shader "Custom/Mask" {
+﻿Shader "Custom/MaskRender" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
+		_Glossiness ("Smoothness", Range(0,1)) = 0.5
+		_Metallic ("Metallic", Range(0,1)) = 0.0
 	}
 	SubShader
 	{
-		Tags { "RenderType"="Transparent" "Queue"="Transparent+11" }
+		Tags { "RenderType"="Transparent" "Queue"="Transparent+12" }
 
 		LOD 200
 
@@ -13,18 +15,15 @@
 		{
 			Stencil
 			{
-				Ref 10
+				Ref 11
 				Comp Equal
-				Pass IncrSat
-				Fail Keep
+				Pass Keep
+				Fail IncrSat
 				ZFail IncrSat
 			}
 
-			Cull Front
-			ZWrite On
-			ZTest LEqual
-//			ColorMask 0
-
+			//ZTest Always
+			
 			CGPROGRAM
 
 			#pragma vertex vert
@@ -33,7 +32,8 @@
 
 			sampler2D _MainTex;
 
-			struct appdata {
+			struct appdata
+			{
 				float4 vertex : POSITION;
 			};
 
@@ -42,6 +42,8 @@
 				float4 pos : SV_POSITION;
 			};
 
+			half _Glossiness;
+			half _Metallic;
 			fixed4 _Color;
 
 			v2f vert(appdata i)
@@ -53,7 +55,7 @@
 
 			float4 frag(v2f i) : SV_Target
 			{
-				return half4(0, 1, 0, 1);
+				return half4(1, 1, 0, 1);
 			}
 
 			ENDCG

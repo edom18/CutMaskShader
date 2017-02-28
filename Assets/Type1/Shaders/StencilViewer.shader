@@ -44,7 +44,7 @@ Shader "Stencils/Viewers/Stencil_ViewRef_01"
 		{
 			Stencil 
 			{
-				Ref 11
+				Ref 10
 				Comp Equal
 				Pass Keep
 			}
@@ -66,7 +66,7 @@ Shader "Stencils/Viewers/Stencil_ViewRef_01"
 		{
 			Stencil 
 			{
-				Ref 2
+				Ref 11
 				Comp Equal
 				Pass Keep
 			}
