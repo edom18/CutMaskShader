@@ -18,13 +18,14 @@
 			Stencil
 			{
 				Ref 3
-				Comp NotEqual
+				Comp Equal
 				Pass Keep
 				Fail Keep
 				ZFail Keep
 			}
 
 			Cull Front
+			ZWrite Off
 			
 			CGPROGRAM
 
@@ -71,8 +72,8 @@
 			float4 frag(v2f i) : SV_Target
 			{
 				//half4 col = tex2Dproj(_MaskGrabTexture, UNITY_PROJ_COORD(i.uvgrab));
-				half4 col = tex2D(_MaskGrabTexture, float2(i.uvgrab.xy / i.uvgrab.w));
-				return col * half4(0, 1, 0, 1);
+//				half4 col = tex2D(_MaskGrabTexture, float2(i.uvgrab.xy / i.uvgrab.w));
+				return half4(0, 1, 0, 1);
 			}
 
 			ENDCG
@@ -83,7 +84,7 @@
 			Stencil
 			{
 				Ref 3
-				Comp Equal
+				Comp NotEqual
 				Pass Keep
 				Fail Keep
 				ZFail Keep
@@ -96,6 +97,7 @@
 			#pragma fragment frag
 			#pragma target 3.0
 
+			uniform sampler2D _MaskGrabTexture;
 			sampler2D _MainTex;
 			fixed4 _Color;
 
@@ -123,13 +125,15 @@
 
 				o.viewDir = normalize(mul(unity_ObjectToWorld, i.vertex).xyz - _WorldSpaceCameraPos);
 				o.uvgrab.xy = (float2(o.pos.x, o.pos.y * scale) + o.pos.w) * 0.5;
+				o.uvgrab.zw = o.pos.zw;
 
 				return o;
 			}
 
 			float4 frag(v2f i) : SV_Target
 			{
-				return half4(1.0, 0.0, 0.0, 1.0);
+				half4 col = tex2D(_MaskGrabTexture, float2(i.uvgrab.xy / i.uvgrab.w));
+				return col * half4(1.0, 0.0, 0.0, 1.0);
 			}
 
 			ENDCG

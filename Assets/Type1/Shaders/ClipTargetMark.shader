@@ -20,12 +20,10 @@
 			float4 pos : SV_POSITION;
 		};
 
-		// マークをつけるのみなので、頂点はただプロジェクション変換だけを行う
 		v2f vert(appdata i)
 		{
 			v2f o;
 			o.pos = mul(UNITY_MATRIX_MVP, i.vertex);
-			// o.normal = UnityObjectToWorldNormal(i.normal);
 			return o;
 		}
 
@@ -93,32 +91,32 @@
 		}
 
 		// 普通にレンダリング
-		Pass
-		{
-			Stencil
-			{
-				Ref 1
-				Comp NotEqual
-				Pass Keep
-				Fail Keep
-				ZFail Keep
-			}
-
-			Cull Back
-			Zwrite On
-
-			CGPROGRAM
-
-			#pragma vertex vert
-			#pragma fragment frag
-
-			float4 frag(v2f i) : SV_Target
-			{
-				return half4(0, 0, 1, 1);
-			}
-
-			ENDCG
-		}
+//		Pass
+//		{
+//			Stencil
+//			{
+//				Ref 1
+//				Comp NotEqual
+//				Pass Keep
+//				Fail Keep
+//				ZFail Keep
+//			}
+//
+//			Cull Back
+//			Zwrite On
+//
+//			CGPROGRAM
+//
+//			#pragma vertex vert
+//			#pragma fragment frag
+//
+//			float4 frag(v2f i) : SV_Target
+//			{
+//				return half4(0, 0, 0.5, 1);
+//			}
+//
+//			ENDCG
+//		}
 	}
 	FallBack "Diffuse"
 }

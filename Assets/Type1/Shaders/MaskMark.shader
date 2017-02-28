@@ -8,8 +8,6 @@
 
 		LOD 200
 
-		GrabPass { "_MaskGrabTexture" }
-
 		// まずは「クリップ領域」を示す部分にマークを付ける
 		Pass
 		{
