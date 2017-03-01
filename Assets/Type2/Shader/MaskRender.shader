@@ -11,6 +11,34 @@
 
 		LOD 200
 
+		CGINCLUDE
+
+		sampler2D _MainTex;
+
+		struct appdata
+		{
+			float4 vertex : POSITION;
+		};
+
+		struct v2f
+		{
+			float4 pos : SV_POSITION;
+		};
+
+		half _Glossiness;
+		half _Metallic;
+		fixed4 _Color;
+
+		v2f vert(appdata i)
+		{
+			v2f o;
+			o.pos = mul(UNITY_MATRIX_MVP, i.vertex);
+			return o;
+		}
+
+		ENDCG
+
+
 		Pass
 		{
 			Stencil
@@ -30,32 +58,33 @@
 			#pragma fragment frag
 			#pragma target 3.0
 
-			sampler2D _MainTex;
-
-			struct appdata
-			{
-				float4 vertex : POSITION;
-			};
-
-			struct v2f
-			{
-				float4 pos : SV_POSITION;
-			};
-
-			half _Glossiness;
-			half _Metallic;
-			fixed4 _Color;
-
-			v2f vert(appdata i)
-			{
-				v2f o;
-				o.pos = mul(UNITY_MATRIX_MVP, i.vertex);
-				return o;
-			}
-
 			float4 frag(v2f i) : SV_Target
 			{
 				return half4(1, 1, 0, 1);
+			}
+
+			ENDCG
+		}
+
+		Pass
+		{
+			Stencil
+			{
+				Ref 11
+				Comp NotEqual
+				Pass Keep
+				Fail Keep
+				ZFail Keep
+			}
+
+			CGPROGRAM
+
+			#pragma vertex vert
+			#pragma fragment frag
+
+			float4 frag(v2f i) : SV_Target
+			{
+				return half4(0, 1, 1, 1);
 			}
 
 			ENDCG
