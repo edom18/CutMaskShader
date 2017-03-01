@@ -14,15 +14,19 @@
 		CGINCLUDE
 
 		sampler2D _MainTex;
+		sampler2D _MaskGrabTexture;
 
 		struct appdata
 		{
 			float4 vertex : POSITION;
+			float3 normal : NORMAL;
 		};
 
 		struct v2f
 		{
 			float4 pos : SV_POSITION;
+			float3 normal : TEXCOORD1;
+			float4 uvgrab : TEXCOORD2;
 		};
 
 		half _Glossiness;
@@ -33,11 +37,23 @@
 		{
 			v2f o;
 			o.pos = mul(UNITY_MATRIX_MVP, i.vertex);
+
+			#if UNITY_UV_STARTS_AT_TOP
+			float scale = -1.0;
+			#else
+			float scale = 1.0;
+			#endif
+
+			// Compute screen pos to UV.
+			o.uvgrab.xy = (float2(o.pos.x, o.pos.y * scale) + o.pos.w) * 0.5;
+			o.uvgrab.zw = o.pos.zw;
+
 			return o;
 		}
 
 		ENDCG
 
+		GrabPass { "_MaskGrabTexture" }
 
 		Pass
 		{
@@ -51,6 +67,7 @@
 			}
 
 			//ZTest Always
+			Blend SrcAlpha OneMinusSrcAlpha
 			
 			CGPROGRAM
 
@@ -84,7 +101,9 @@
 
 			float4 frag(v2f i) : SV_Target
 			{
-				return half4(0, 1, 1, 1);
+				half4 texel = tex2D(_MaskGrabTexture, float2(i.uvgrab.xy / i.uvgrab.w));
+				half4 col = texel * half4(0, 1, 1, 0.5);
+				return col;
 			}
 
 			ENDCG
