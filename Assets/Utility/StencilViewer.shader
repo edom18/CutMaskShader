@@ -88,7 +88,7 @@ Shader "Stencils/Viewers/Stencil_ViewRef_01"
 		{
 			Stencil 
 			{
-				Ref 3
+				Ref 12
 				Comp Equal
 				Pass Keep
 			}
