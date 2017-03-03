@@ -2,8 +2,6 @@
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
-		_Glossiness ("Smoothness", Range(0,1)) = 0.5
-		_Metallic ("Metallic", Range(0,1)) = 0.0
 	}
 	SubShader
 	{
@@ -11,6 +9,8 @@
 
 		LOD 200
 
+
+		// --------------------------
 		CGINCLUDE
 
 		sampler2D _MainTex;
@@ -29,8 +29,6 @@
 			float4 uvgrab : TEXCOORD2;
 		};
 
-		half _Glossiness;
-		half _Metallic;
 		fixed4 _Color;
 
 		v2f vert(appdata i)
@@ -52,21 +50,26 @@
 		}
 
 		ENDCG
+		// --------------------------
 
+
+		// Grab background rendering.
 		GrabPass { "_MaskGrabTexture" }
+
 
 		Pass
 		{
+			Name "TargetSurface"
+
 			Stencil
 			{
 				Ref 11
 				Comp Equal
 				Pass Keep
-				Fail IncrSat
-				ZFail IncrSat
+//				Fail IncrSat
+//				ZFail IncrSat
 			}
 
-			//ZTest Always
 			Blend SrcAlpha OneMinusSrcAlpha
 			
 			CGPROGRAM
@@ -77,7 +80,7 @@
 
 			float4 frag(v2f i) : SV_Target
 			{
-				return half4(1, 1, 0, 1);
+				return half4(0.0, 0.5, 1.0, 1.0);
 			}
 
 			ENDCG
@@ -85,10 +88,12 @@
 
 		Pass
 		{
+			Name "TargetBackFace"
+
 			Stencil
 			{
-				Ref 11
-				Comp NotEqual
+				Ref 12
+				Comp Equal
 				Pass Keep
 				Fail Keep
 				ZFail Keep
@@ -101,8 +106,33 @@
 
 			float4 frag(v2f i) : SV_Target
 			{
-				half4 texel = tex2D(_MaskGrabTexture, float2(i.uvgrab.xy / i.uvgrab.w));
-				half4 col = texel * half4(0, 1, 1, 0.5);
+//				half4 texel = tex2D(_MaskGrabTexture, float2(i.uvgrab.xy / i.uvgrab.w));
+				half4 col = half4(0.0, 0.9, 1, 1);
+				return col;
+			}
+
+			ENDCG
+		}
+
+		Pass
+		{
+			Stencil
+			{
+				Ref 10
+				Comp Equal
+			}
+
+			Blend SrcAlpha OneMinusSrcAlpha
+
+			CGPROGRAM
+
+			#pragma vertex vert
+			#pragma fragment frag
+
+			float4 frag(v2f i) : SV_Target
+			{
+//				half4 texel = tex2D(_MaskGrabTexture, float2(i.uvgrab.xy / i.uvgrab.w));
+				half4 col = half4(0, 1, 1, 0.5);
 				return col;
 			}
 
