@@ -24,7 +24,7 @@
 			}
 
 			Cull Front
-			Zwrite On
+			Zwrite Off
 			ColorMask 0
 
 			CGPROGRAM
