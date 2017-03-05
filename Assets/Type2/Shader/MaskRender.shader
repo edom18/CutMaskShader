@@ -1,6 +1,7 @@
 ﻿Shader "Custom/MaskRender" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
+		_MaskColor ("Mask color", Color) = (0.0, 0.9, 1.0, 1.0)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
 	}
 	SubShader
@@ -30,6 +31,7 @@
 		};
 
 		fixed4 _Color;
+		fixed4 _MaskColor;
 
 		v2f vert(appdata i)
 		{
@@ -80,23 +82,20 @@
 
 			float4 frag(v2f i) : SV_Target
 			{
-				return half4(0.0, 0.5, 1.0, 1.0);
+				return half4(0.0, 0.5, 1.0, 0.5);
 			}
 
 			ENDCG
 		}
 
+		// ------------------------------------------------------
+		// Target back face.
 		Pass
 		{
-			Name "TargetBackFace"
-
 			Stencil
 			{
 				Ref 12
 				Comp Equal
-				Pass Keep
-				Fail Keep
-				ZFail Keep
 			}
 
 			CGPROGRAM
@@ -106,14 +105,14 @@
 
 			float4 frag(v2f i) : SV_Target
 			{
-//				half4 texel = tex2D(_MaskGrabTexture, float2(i.uvgrab.xy / i.uvgrab.w));
-				half4 col = half4(0.0, 0.9, 1, 1);
-				return col;
+				return _MaskColor;
 			}
 
 			ENDCG
 		}
 
+		// ------------------------------------------------------
+		// Mask surface.
 		Pass
 		{
 			Stencil
@@ -132,8 +131,9 @@
 			float4 frag(v2f i) : SV_Target
 			{
 //				half4 texel = tex2D(_MaskGrabTexture, float2(i.uvgrab.xy / i.uvgrab.w));
-				half4 col = half4(0, 1, 1, 0.5);
-				return col;
+//				half4 col = half4(0, 1, 1, 0.0);
+//				return col;
+				return _Color;
 			}
 
 			ENDCG
