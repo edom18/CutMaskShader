@@ -41,7 +41,7 @@
 			Comp Equal
 		}
 
-		ZTest GEqual
+		ZTest Always
 
 		CGPROGRAM
 		#pragma surface surf Standard fullforwardshadows
