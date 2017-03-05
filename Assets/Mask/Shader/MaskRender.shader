@@ -56,37 +56,37 @@
 
 
 		// Grab background rendering.
-		GrabPass { "_MaskGrabTexture" }
-
-
-		Pass
-		{
-			Name "TargetSurface"
-
-			Stencil
-			{
-				Ref 11
-				Comp Equal
-				Pass Keep
-//				Fail IncrSat
-//				ZFail IncrSat
-			}
-
-			Blend SrcAlpha OneMinusSrcAlpha
-			
-			CGPROGRAM
-
-			#pragma vertex vert
-			#pragma fragment frag
-			#pragma target 3.0
-
-			float4 frag(v2f i) : SV_Target
-			{
-				return half4(0.0, 0.5, 1.0, 0.5);
-			}
-
-			ENDCG
-		}
+//		GrabPass { "_MaskGrabTexture" }
+//
+//
+//		Pass
+//		{
+//			Name "TargetSurface"
+//
+//			Stencil
+//			{
+//				Ref 11
+//				Comp Equal
+//				Pass Keep
+////				Fail IncrSat
+////				ZFail IncrSat
+//			}
+//
+//			Blend SrcAlpha OneMinusSrcAlpha
+//			
+//			CGPROGRAM
+//
+//			#pragma vertex vert
+//			#pragma fragment frag
+//			#pragma target 3.0
+//
+//			float4 frag(v2f i) : SV_Target
+//			{
+//				return half4(0.0, 0.5, 1.0, 0.5);
+//			}
+//
+//			ENDCG
+//		}
 
 		// ------------------------------------------------------
 		// Target back face.
@@ -122,6 +122,7 @@
 			}
 
 			Blend SrcAlpha OneMinusSrcAlpha
+			ColorMask 0
 
 			CGPROGRAM
 
