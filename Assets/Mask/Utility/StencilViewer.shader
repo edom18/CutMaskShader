@@ -4,6 +4,7 @@ Shader "Stencils/Viewers/Stencil_ViewRef_01"
 {
 	Properties
 	{
+		_Color0 ("Main Color", Color) = (0.5,0.5,0.5,1)
 		_Color1 ("Main Color", Color) = (0.5,0.5,0.5,1)
 		_Color2 ("Main Color", Color) = (0.5,0.5,0.5,1)
 		_Color3 ("Main Color", Color) = (0.5,0.5,0.5,1)
@@ -18,6 +19,7 @@ Shader "Stencils/Viewers/Stencil_ViewRef_01"
 
 		CGINCLUDE
 
+		fixed4 _Color0;
 		fixed4 _Color1;
 		fixed4 _Color2;
 		fixed4 _Color3;
@@ -39,6 +41,28 @@ Shader "Stencils/Viewers/Stencil_ViewRef_01"
 			return o;
 		}
 		ENDCG
+
+		Pass
+		{
+			Stencil 
+			{
+				Ref 9
+				Comp Equal
+				Pass Keep
+			}
+
+			CGPROGRAM
+
+			#pragma vertex vert
+			#pragma fragment frag
+
+			half4 frag(v2f i) : COLOR 
+			{
+				return _Color0;
+			}
+
+			ENDCG
+		}
 
 		Pass
 		{
