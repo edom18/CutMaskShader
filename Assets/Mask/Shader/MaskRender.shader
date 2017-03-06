@@ -30,6 +30,12 @@
 			float4 uvgrab : TEXCOORD2;
 		};
 
+		struct FragOut
+		{
+			float4 color : SV_Target;
+			float depth : SV_Depth;
+		};
+
 		fixed4 _Color;
 		fixed4 _MaskColor;
 
@@ -53,6 +59,66 @@
 
 		ENDCG
 		// --------------------------
+
+		// ------------------------------------------------------
+		// Target back face.
+		Pass
+		{
+			Stencil
+			{
+				Ref 12
+				Comp Equal
+			}
+
+			CGPROGRAM
+
+			#pragma vertex vert
+			#pragma fragment frag
+
+			float4 frag(v2f i) : SV_Target
+			{
+				return _MaskColor;
+			}
+
+			ENDCG
+		}
+
+		Pass
+		{
+			Name "TargetSurface"
+
+			Stencil
+			{
+				Ref 10
+				Comp Equal
+				Pass Keep
+			}
+
+			Blend SrcAlpha OneMinusSrcAlpha
+			Cull Back
+			ZTest Always
+			
+			CGPROGRAM
+
+			#pragma vertex vert
+			#pragma fragment frag
+			#pragma target 3.0
+
+			FragOut frag(v2f i)
+			{
+				FragOut o = (FragOut)0;
+				o.color = half4(0.0, 0.5, 1.0, 0.0);
+				o.depth = 0;
+				return o;
+			}
+
+			ENDCG
+		}
+
+
+
+
+
 
 
 		// Grab background rendering.
@@ -90,55 +156,55 @@
 
 		// ------------------------------------------------------
 		// Target back face.
-		Pass
-		{
-			Stencil
-			{
-				Ref 12
-				Comp Equal
-			}
+		//Pass
+		//{
+		//	Stencil
+		//	{
+		//		Ref 12
+		//		Comp Equal
+		//	}
 
-			CGPROGRAM
+		//	CGPROGRAM
 
-			#pragma vertex vert
-			#pragma fragment frag
+		//	#pragma vertex vert
+		//	#pragma fragment frag
 
-			float4 frag(v2f i) : SV_Target
-			{
-				return _MaskColor;
-			}
+		//	float4 frag(v2f i) : SV_Target
+		//	{
+		//		return _MaskColor;
+		//	}
 
-			ENDCG
-		}
+		//	ENDCG
+		//}
 
 		// ------------------------------------------------------
 		// Mask surface.
-		Pass
-		{
-			Stencil
-			{
-				Ref 10
-				Comp Equal
-			}
-
-			Blend SrcAlpha OneMinusSrcAlpha
-			ColorMask 0
-
-			CGPROGRAM
-
-			#pragma vertex vert
-			#pragma fragment frag
-
-			float4 frag(v2f i) : SV_Target
-			{
-//				half4 texel = tex2D(_MaskGrabTexture, float2(i.uvgrab.xy / i.uvgrab.w));
-//				half4 col = half4(0, 1, 1, 0.0);
-//				return col;
-				return _Color;
-			}
-
-			ENDCG
-		}
+//		Pass
+//		{
+//			Stencil
+//			{
+//				Ref 10
+//				Comp Equal
+//			}
+//
+//			Blend SrcAlpha OneMinusSrcAlpha
+//			ColorMask 0
+//
+//			CGPROGRAM
+//
+//			#pragma vertex vert
+//			#pragma fragment frag
+//
+//			float4 frag(v2f i) : SV_Target
+//			{
+////				half4 texel = tex2D(_MaskGrabTexture, float2(i.uvgrab.xy / i.uvgrab.w));
+////				half4 col = half4(0, 1, 1, 0.0);
+////				return col;
+//				return _Color;
+//			}
+//
+//			ENDCG
+		//}
 	}
 	FallBack "Diffuse"
 }
