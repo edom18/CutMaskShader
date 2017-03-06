@@ -85,11 +85,28 @@
 
 		Pass
 		{
-			Name "TargetSurface"
+			Blend SrcAlpha OneMinusSrcAlpha
+			Cull Back
+			
+			CGPROGRAM
 
+			#pragma vertex vert
+			#pragma fragment frag
+			#pragma target 3.0
+
+			float4 frag(v2f i) : SV_Target
+			{
+				return half4(0, 0.5, 1.0, 0.0);
+			}
+
+			ENDCG
+		}
+
+		Pass
+		{
 			Stencil
 			{
-				Ref 10
+				Ref 9
 				Comp Equal
 				Pass Keep
 			}
@@ -114,97 +131,6 @@
 
 			ENDCG
 		}
-
-
-
-
-
-
-
-		// Grab background rendering.
-//		GrabPass { "_MaskGrabTexture" }
-//
-//
-//		Pass
-//		{
-//			Name "TargetSurface"
-//
-//			Stencil
-//			{
-//				Ref 11
-//				Comp Equal
-//				Pass Keep
-////				Fail IncrSat
-////				ZFail IncrSat
-//			}
-//
-//			Blend SrcAlpha OneMinusSrcAlpha
-//			
-//			CGPROGRAM
-//
-//			#pragma vertex vert
-//			#pragma fragment frag
-//			#pragma target 3.0
-//
-//			float4 frag(v2f i) : SV_Target
-//			{
-//				return half4(0.0, 0.5, 1.0, 0.5);
-//			}
-//
-//			ENDCG
-//		}
-
-		// ------------------------------------------------------
-		// Target back face.
-		//Pass
-		//{
-		//	Stencil
-		//	{
-		//		Ref 12
-		//		Comp Equal
-		//	}
-
-		//	CGPROGRAM
-
-		//	#pragma vertex vert
-		//	#pragma fragment frag
-
-		//	float4 frag(v2f i) : SV_Target
-		//	{
-		//		return _MaskColor;
-		//	}
-
-		//	ENDCG
-		//}
-
-		// ------------------------------------------------------
-		// Mask surface.
-//		Pass
-//		{
-//			Stencil
-//			{
-//				Ref 10
-//				Comp Equal
-//			}
-//
-//			Blend SrcAlpha OneMinusSrcAlpha
-//			ColorMask 0
-//
-//			CGPROGRAM
-//
-//			#pragma vertex vert
-//			#pragma fragment frag
-//
-//			float4 frag(v2f i) : SV_Target
-//			{
-////				half4 texel = tex2D(_MaskGrabTexture, float2(i.uvgrab.xy / i.uvgrab.w));
-////				half4 col = half4(0, 1, 1, 0.0);
-////				return col;
-//				return _Color;
-//			}
-//
-//			ENDCG
-		//}
 	}
 	FallBack "Diffuse"
 }
