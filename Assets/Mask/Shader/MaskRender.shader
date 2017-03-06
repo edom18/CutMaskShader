@@ -130,7 +130,12 @@
 			{
 				FragOut o = (FragOut)0;
 				o.color = half4(0.0, 0.5, 1.0, 0.0);
-				o.depth = 0;
+				o.depth = 1 - UNITY_NEAR_CLIP_VALUE;
+//				#if UNITY_REVERSED_Z
+//				o.depth = 0;
+//				#else
+//				o.depth = 1;
+//				#endif
 				return o;
 			}
 
